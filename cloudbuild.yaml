@@ -1,0 +1,21 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$informationextraction-468103/RAG_API', '.']
+
+  # Step 2: Push the Docker image to Google container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', "gcr.io/$informationextraction-468103/RAG_API"]
+
+  # Step 3: Deploy the image to Cloud Run
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'run'
+      - 'deploy'
+      - 'rag-api'
+      - '--image=gcr.io/$informationextraction-468103/RAG_API'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unathenticated'
+      - '--port=8080'
+      - '--update-secrets=API_KEY=HF_API_KEY:latest'
