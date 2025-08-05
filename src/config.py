@@ -26,8 +26,7 @@ class LocalRag:
                  env_path: str = ".env",
                  raw_text: str = None
                  ):
-        
-        self._load_env(env_path)
+       
 
         self._huggingface_login()
         self.embedding_model = SentenceTransformer(embedding_model)
@@ -61,14 +60,13 @@ class LocalRag:
             logger.warning(f".env file not found at: {path}...")
 
     def _huggingface_login(self):
-        api_key = os.getenv("API_KEY")
+        api_key = os.getenv("HF_API_KEY")
         if not api_key:
             raise ValueError("API Key not found in environment variables...")
         login(api_key)
         logger.info("Huggin Face login successful")
 
     def split_text(self, text, max_length=500):
-        
         sentences = re.split(r'(?<=[.!?]) +', text)
         chunks=[]
 
