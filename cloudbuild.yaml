@@ -19,5 +19,5 @@ steps:
       - '--allow-unathenticated'
       - '--port=8080'
       - '--update-secrets=API_KEY=HF_API_KEY:latest'
-  - options:
-      logging: NONE
+options: 
+  logging: NONE
