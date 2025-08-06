@@ -1,9 +1,16 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from pydantic import BaseModel
-from src.config import LocalRag
-from src.utils import extract_text
 import tempfile
 from fastapi.responses import JSONResponse
+
+try:
+    from src.config import LocalRag
+    from src.utils import extract_text
+except Exception as e:
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    logging.error(f"Failed to import modules: {e}")
+    raise
 
 app = FastAPI()
 
