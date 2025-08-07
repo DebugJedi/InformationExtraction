@@ -2,7 +2,10 @@ from fastapi import FastAPI, UploadFile, File, Form
 from pydantic import BaseModel
 import tempfile
 from fastapi.responses import JSONResponse
-from fastapi.middle
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
 try:
     from src.config import LocalRag
     from src.utils import extract_text
@@ -13,6 +16,14 @@ except Exception as e:
     raise
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[*],
+    allow_credentials=True,
+    allow_methods=[*],
+    allow_headers=[*],
+)
 
 @app.get("/")
 def read_root():
