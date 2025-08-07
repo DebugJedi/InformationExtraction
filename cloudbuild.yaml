@@ -9,15 +9,13 @@ steps:
 
   # Step 3: Deploy the image to Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: 
-      - 'run'
-      - 'deploy'
-      - 'rag-api'
-      - '--image=gcr.io/$PROJECT_ID/rag-api'
-      - '--region=us-central1'
-      - '--platform=managed'
-      - '--allow-unauthenticated'
-      - '--port=8080'
-      - '--update-secrets=API_KEY=HF_API_KEY:latest'
+    args: [
+      - 'run','deploy','rag-api',
+      - '--image=gcr.io/$PROJECT_ID/rag-api',
+      - '--region=us-central1',
+      - '--platform=managed',
+      - '--allow-unauthenticated',
+      - '--port=8080',
+      - '--update-secrets=API_KEY=HF_API_KEY:latest']
 options: 
   logging: CLOUD_LOGGING_ONLY
