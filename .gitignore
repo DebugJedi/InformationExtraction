@@ -5,3 +5,4 @@ myenv/
 __pycache__/
 *.pyc
 .env
+config_local.py
