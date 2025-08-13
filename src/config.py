@@ -12,7 +12,7 @@ import torch
 import requests
 from dotenv import load_dotenv
 from huggingface_hub import login
-from sentence_tranformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer
 from src.utils import extract_text
 
 
@@ -54,7 +54,7 @@ class LocalRag:
         self._huggingface_login()
 
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        self.embedding_model = SentenceTranformer(embedding_model, device=self.device)
+        self.embedding_model = SentenceTransformer(embedding_models, device=self.device)
 
         self.index: Optional[faiss.Index] = None
         self.text_chunks: List[str] = []
