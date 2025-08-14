@@ -1,7 +1,10 @@
-*.pdf
-main.py
-myenv/
-.DS_Store
+.git
 __pycache__/
 *.pyc
-config_local.py
+.env*
+venv/
+myenv/
+.cache/
+data/
+datasets/
+*.pdf
