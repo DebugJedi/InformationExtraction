@@ -6,3 +6,5 @@ __pycache__/
 *.pyc
 .env
 config_local.py
+app_copy.py
+cloudbuild_copy.yaml
