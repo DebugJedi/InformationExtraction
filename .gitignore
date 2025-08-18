@@ -8,3 +8,6 @@ __pycache__/
 config_local.py
 app_copy.py
 cloudbuild_copy.yaml
+!Dockerfile
+!requirements.txt
+!app.py
