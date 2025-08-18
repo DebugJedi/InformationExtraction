@@ -1,12 +1,12 @@
-# cloudbuild
+# cloudbuild.yaml
 substitutions:
   _REGION: us-west1
   _REPO: rag
   _IMAGE: rag-api
-  _SERVICE:   rag-API_KEY
+  _SERVICE: rag-api
 
-steps: 
-# Build the image
+steps:
+  # Build
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -14,24 +14,27 @@ steps:
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
       - .
 
-  # Push it to Artifacts
+  # Push
   - name: gcr.io/cloud-builders/docker
     args:
       - push
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
 
-# Deploy to cloud run
+  # Deploy (note: --allow-unauthenticated is the valid flag)
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
-    entrypoint: bash
+    entrypoint: gcloud
     args:
-      - -c
-      - |
-        gcloud run deploy ${_SERVICE} \
-          --image ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA \
-          --region ${_REGION} \
-          --allow-authenticated \
-          --cpu=2 --memory=2Gi --timeout=600 --cpu-boost \
-          --set-env-vars=TRANSFORMERS_NO_TF=1,OMP_NUM_THREADS=1
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+      - --cpu=2
+      - --memory=2Gi
+      - --timeout=600
+      - --set-env-vars=TRANSFORMERS_NO_TF=1,OMP_NUM_THREADS=1,PORT=8080
 
 images:
   - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:$SHORT_SHA
