@@ -8,6 +8,8 @@ steps:
       - build
       - -t
       - us-west1-docker.pkg.dev/informationextraction-468103/${_REPO}/${_IMAGE}:${SHORT_SHA}
+      - -t
+      - us-west1-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:latest
       - .
 
   # Step 2: Push the image
