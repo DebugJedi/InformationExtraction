@@ -1,5 +1,5 @@
 **
-!Doclerfile
+!Dockerfile
 !requirements.txt
 !app.py
 !src/**
