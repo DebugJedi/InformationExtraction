@@ -12,3 +12,31 @@ cloudbuild_copy1.yaml
 !Dockerfile
 !requirements.txt
 !app.py
+# Ignore Python cruft
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.csv
+*.tsv
+*.json
+*.pkl
+*.h5
+*.db
+*.sqlite
+
+# Ignore environments
+.venv/
+venv/
+myenv/
+
+# Ignore notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+
+
+# Ignore system files
+.DS_Store
+*.swp
