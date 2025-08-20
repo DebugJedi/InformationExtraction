@@ -6,6 +6,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - build
+      - --no-cache
       - -t
       - us-west1-docker.pkg.dev/informationextraction-468103/${_REPO}/${_IMAGE}:$BUILD_ID
       - -t
@@ -36,3 +37,6 @@ substitutions:
   _REPO: "ocr-rag-app-repo"
   _IMAGE: "rag-api"
   _REGION: "us-west1"
+
+options:
+  machineType: "E2_HIGHCPU_8"
