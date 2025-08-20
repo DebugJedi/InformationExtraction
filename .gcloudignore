@@ -1,8 +1,30 @@
-.git
-.venv
-__pycache__
+# Ignore Python cruft
+__pycache__/
 *.pyc
-*.pkl
-*.csv
+*.pyo
+*.pyd
 *.log
+*.csv
+*.tsv
+*.json
+*.pkl
+*.h5
+*.db
+*.sqlite
+
+# Ignore environments
+.venv/
+venv/
+env/
+
+# Ignore notebooks
 *.ipynb
+.ipynb_checkpoints/
+
+# Ignore Git
+.git/
+.gitignore
+
+# Ignore system files
+.DS_Store
+*.swp
