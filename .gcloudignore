@@ -1,30 +1,6 @@
-# Ignore Python cruft
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.log
-*.csv
-*.tsv
-*.json
-*.pkl
-*.h5
-*.db
-*.sqlite
-
-# Ignore environments
-.venv/
-venv/
-env/
-
-# Ignore notebooks
-*.ipynb
-.ipynb_checkpoints/
-
-# Ignore Git
-.git/
-.gitignore
-
-# Ignore system files
-.DS_Store
-*.swp
+**
+!Doclerfile
+!requirements.txt
+!app.py
+!src/**
+!cloudbuild.yaml
