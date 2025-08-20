@@ -1,5 +1,5 @@
 # Tell Cloud Build to always use the Cloud Build SA
-serviceAccount: "my-build-sa@informationextraction-468103.iam.gserviceaccount.com"
+# serviceAccount: "my-build-sa@informationextraction-468103.iam.gserviceaccount.com"
 
 steps:
   # Step 1: Build the Docker image
