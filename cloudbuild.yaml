@@ -7,7 +7,7 @@ steps:
     args:
       - build
       - -t
-      - us-west1-docker.pkg.dev/informationextraction-468103/${_REPO}/${_IMAGE}:${SHORT_SHA}
+      - us-west1-docker.pkg.dev/informationextraction-468103/${_REPO}/${_IMAGE}:$BUILD_ID
       - -t
       - us-west1-docker.pkg.dev/${PROJECT_ID}/${_REPO}/${_IMAGE}:latest
       - .
@@ -16,7 +16,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us-west1-docker.pkg.dev/informationextraction-468103/${_REPO}/${_IMAGE}:${SHORT_SHA}
+      - us-west1-docker.pkg.dev/informationextraction-468103/${_REPO}/${_IMAGE}:$BUILD_ID
 
   # Step 3: Deploy to Cloud Run
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
@@ -25,7 +25,7 @@ steps:
       - run
       - deploy
       - ${_SERVICE}
-      - --image=us-west1-docker.pkg.dev/informationextraction-468103/${_REPO}/${_IMAGE}:${SHORT_SHA}
+      - --image=us-west1-docker.pkg.dev/informationextraction-468103/${_REPO}/${_IMAGE}:$BUILD_ID
       - --region=${_REGION}
       - --platform=managed
       - --allow-unauthenticated
