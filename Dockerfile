@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11-slim-bullseye
 # Install security updates to reduce vulnerabilities
 
 WORKDIR /app
