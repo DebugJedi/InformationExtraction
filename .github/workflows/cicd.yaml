@@ -36,7 +36,7 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t ${{ env.DOCKER_IMAGE_URL  }}:latest -f Dockerfile.prod .
+          docker build -t ${{ env.DOCKER_IMAGE_URL  }}:latest -f Dockerfile .
           docker push ${{ env.DOCKER_IMAGE_URL  }}:latest
 
       - name: Deploy to Cloud Run
