@@ -3,7 +3,7 @@ name: Deploy to Cloud Run
 env:
   SERVICE_NAME: custom-ocr-rag-app
   PROJECT_ID: informationextraction-468103
-  DOCKER_IMAGE_URL: us-west1-docker.pkg.dev/informationextraction-468103/ocr-rag-app-repo/rag-api:latest
+  DOCKER_IMAGE_URL: us-west1-docker.pkg.dev/informationextraction-468103/ocr-rag-app-repo/rag-api
 
 on: 
   push:
