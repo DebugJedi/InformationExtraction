@@ -56,7 +56,7 @@ async def query_pdf(file: UploadFile=File(..., description="PDF file for knowled
         return {"answer": answer}
     except Exception as e:
         logger.exception("RAG pipeline failed!")
-        raise HTTPException(status_code=500, detail="Failed to run RAG query.")       
+        raise HTTPException(status_code=500, detail=f"Failed to run RAG query: {e}...")       
     
 
 
