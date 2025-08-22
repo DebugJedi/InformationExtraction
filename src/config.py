@@ -11,6 +11,7 @@ import faiss
 import torch
 import requests
 from dotenv import load_dotenv
+from huggingface_hub import InferenceClient
 from huggingface_hub import login
 from sentence_transformers import SentenceTransformer
 from src.utils import extract_text
@@ -20,9 +21,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-HF_INFERENCE_URL = "https://api-inference.huggingface.co/models"
+# HF_INFERENCE_URL = "https://api-inference.huggingface.co/models"
 DEFAULT_EMBED_MODEL = "all-miniLM-L6-v2"
-DEFAULT_GEN_MODEL = "google/flan-t5-base"
+DEFAULT_GEN_MODEL = "deepseek-ai/DeepSeek-V3-0324"
 DEFAULT_MAX_CONTEXT_CHARS = 2000
 DEFAULT_TOP_K = 5
 DEFAULT_BATCH_SIZE = 64
@@ -51,7 +52,7 @@ class LocalRag:
     ):
 
         self._load_env(env_path)
-        self._huggingface_login()
+        # self._huggingface_login()
 
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.embedding_model = SentenceTransformer(embedding_models, device=self.device)
@@ -60,14 +61,16 @@ class LocalRag:
         self.text_chunks: List[str] = []
 
 
-        self.gen_model = gen_model
-        self.hf_token = os.getenv("HF_API_KEY")
-        if not self.hf_token:
+        # self.gen_model = gen_model
+        hf_token = os.getenv("HF_API_KEY")
+        if not hf_token:
             raise ValueError("HF_API_KEY missing. Add it to your environment/.env")
+        
+        self.client = InferenceClient(api_key=hf_token)
+        self.gen_model = gen_model
 
         if index_path and chunks_path and self._load_index(index_path, chunks_path):
             logger.info("Loaded persisted FAISS index and chunks.")
-
         elif raw_text:
             self.build_knowledge_base(raw_text)
 
@@ -76,7 +79,6 @@ class LocalRag:
     def _load_env(self, path: str) -> None:
         if load_dotenv(dotenv_path = path):
             logger.info(f".env loaded from: {path}")
-
         else: 
             logger.warning(f".env file not found at: {path} ")
 
@@ -186,7 +188,6 @@ class LocalRag:
         """
         Try to load persisted index. Returns True on success.
         """
-
         try:
             if not (os.path.exists(index_path)) and os.path.exists(chunks_path):
                 return False
@@ -223,37 +224,20 @@ class LocalRag:
         Hit HF Interface API with pooled session and reasonable timeout.
         """
 
-        headers = {
-            "Authorization": f"Bearer {self.hf_token}",
-            "Content-Type": "application/json",
-        }
-
-        payload = {
-            "inputs": prompt,
-            "parameters": {
-                "max_new_tokens": max_new_tokens,
-                "temperature": temperature
-            },
-            "options": {"wait_for_model": True}, #Cold start safety.
-        }
-        if stop:
-            payload["parameters"]["stop"] = stop
-
-        url = f"{HF_INFERENCE_URL}/{self.gen_model}"
-
-        resp = _HTTP.post(url, headers=headers, json= payload, timeout=DEFAULT_TIMEOUT_S )
-        resp.raise_for_status() #will raise HTTPError on non-2xx
-
-        data = resp.json()
-
-        # HF can return either a list of dicts or a dict with 'generated_text'
-        if isinstance(data, list) and data and "generated_text" in data:
-            return data["generated_text"]
-        if isinstance(data, dict) and "generated_text" in data:
-            return data["generated_text"]
-        # Some models return {'error': '...'} or different shapes
-        raise RuntimeError(f"Unexpected HF response: {data}")
-    
+        try:
+            completion = self.client.chat.completions.create(
+                model=self.gen_model,
+                messages=[
+                    {"role": "system", "content": "You are a concise AI assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=max_new_tokens,
+                temperature=temperature,
+            )
+            return completion.choices[0].message["content"]
+        except Exception as e:
+            logger.error(f"Inference Providers error: {e}")
+            raise
 
     def generate_answer(
             self, 
@@ -284,6 +268,10 @@ class LocalRag:
                 temperature=temperature,
                 stop=["\n\nQuestion: "], #mild guard
             )
+            answer = text.split("Answer: ")[-1].strip()
+
+            return answer
+    
         except requests.HTTPError as e:
             logger.error(f"HF Inference API HTTP error: {e} / {getattr(e, 'response', None)}")
             raise
@@ -291,10 +279,7 @@ class LocalRag:
             logger.error(f"HF Inference API error: {e}")
             raise
 
-        answer = text.split("Answer: ")[-1].strip()
-
-        return answer
-    
+        
 
     def query(self, question: str, top_k: int = DEFAULT_TOP_K) -> str:
         chunks = self.retrieve_relevant_chunks(question, top_k=top_k)

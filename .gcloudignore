@@ -4,3 +4,4 @@
 !app.py
 !src/**
 !cloudbuild.yaml
+config_copy.py

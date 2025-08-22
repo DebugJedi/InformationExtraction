@@ -40,3 +40,4 @@ myenv/
 # Ignore system files
 .DS_Store
 *.swp
+config_copy.py
