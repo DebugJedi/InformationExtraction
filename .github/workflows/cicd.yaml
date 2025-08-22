@@ -46,4 +46,6 @@ jobs:
             --image ${{ env.DOCKER_IMAGE_URL  }}:latest \
             --platform managed \
             --region us-west1 \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --memory 2Gi \
+            --timeout 900
