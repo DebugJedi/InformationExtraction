@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 HF_INFERENCE_URL = "https://api-inference.huggingface.co/models"
 DEFAULT_EMBED_MODEL = "all-miniLM-L6-v2"
-DEFAULT_GEN_MODEL = "microsoft/phi-2"
+DEFAULT_GEN_MODEL = "google/flan-t5-base"
 DEFAULT_MAX_CONTEXT_CHARS = 2000
 DEFAULT_TOP_K = 5
 DEFAULT_BATCH_SIZE = 64
