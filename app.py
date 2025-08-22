@@ -8,7 +8,12 @@ logger = logging.getLogger("uvicorn.error")
 
 app = FastAPI()
 
-app.post("/query_pdf", summary="Upload a PDF and ask your question.")
+@app.get("/")
+def read_root():
+    return {"message": "RAG API is running. Use /docs to interact with it. "}
+
+
+@app.post("/query_pdf", summary="Upload a PDF and ask your question.")
 async def query_pdf(file: UploadFile=File(..., description="PDF file for knowledgebase."),
         question: str= Form(..., description="Your question about the PDF.")):
     # Validate content type
