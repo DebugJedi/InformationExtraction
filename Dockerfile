@@ -17,4 +17,4 @@ ENV OMP_NUM_THREADS=1
 ENV PORT=8080
 
 # Important: Listen on $PORT
-CMD sh -c 'uvicorn app:app --host 0.0.0.0 --port ${PORT}' 
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
